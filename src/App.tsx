@@ -18,6 +18,7 @@ import { MyTasksPage } from '@/pages/MyTasksPage';
 import { ReportsPage } from '@/pages/ReportsPage';
 import { SettingsPage } from '@/pages/SettingsPage';
 import { HRIntegrationPage } from '@/pages/HRIntegrationPage';
+import { LandingPage } from '@/pages/LandingPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -36,6 +37,7 @@ export default function App() {
           <ErrorBoundary>
             <Routes>
               {/* Public routes */}
+              <Route path="/" element={<LandingPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/accept-invite/:token" element={<AcceptInvitePage />} />
@@ -87,11 +89,11 @@ export default function App() {
                     </ProtectedRoute>
                   </ErrorBoundary>
                 } />
-                {/* Root → smart redirect based on role */}
-                <Route path="/" element={<RoleRedirect />} />
+                {/* After login → smart redirect based on role */}
+                <Route path="/app" element={<RoleRedirect />} />
               </Route>
 
-              <Route path="*" element={<Navigate to="/login" replace />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </ErrorBoundary>
           <Toaster />
