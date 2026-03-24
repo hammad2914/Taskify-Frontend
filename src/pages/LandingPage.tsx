@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { Icon } from '@iconify/react';
 import {
   LayoutGrid, Users, Sparkles, Bell, Link, Shield,
   Play, Check, Star, Menu, X, ArrowRight, ChevronRight,
@@ -944,13 +945,21 @@ function Footer() {
               Modern project management for high-velocity teams who ship without chaos.
             </p>
             <div className="flex gap-2.5">
-              {['𝕏', 'in', 'gh'].map(icon => (
-                <button
+              {[
+                { icon: 'ri:twitter-x-fill',  href: 'https://x.com',          label: 'X / Twitter' },
+                { icon: 'ri:linkedin-fill',    href: 'https://linkedin.com',   label: 'LinkedIn'    },
+                { icon: 'ri:github-fill',      href: 'https://github.com',     label: 'GitHub'      },
+              ].map(({ icon, href, label }) => (
+                <a
                   key={icon}
-                  className="w-8 h-8 rounded-lg bg-white/[0.05] border border-white/10 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all duration-200 text-xs font-mono"
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className="w-8 h-8 rounded-lg bg-white/[0.05] border border-white/10 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all duration-200"
                 >
-                  {icon}
-                </button>
+                  <Icon icon={icon} width={15} height={15} />
+                </a>
               ))}
             </div>
           </div>

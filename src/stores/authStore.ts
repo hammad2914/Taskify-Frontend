@@ -11,6 +11,7 @@ interface AuthState {
   setAuth: (user: User, company: Company, accessToken: string) => void;
   setAccessToken: (token: string) => void;
   updateUser: (user: Partial<User>) => void;
+  updateCompany: (updates: Partial<Company>) => void;
   setInitialized: () => void;
   logout: () => void;
 }
@@ -30,6 +31,11 @@ export const useAuthStore = create<AuthState>((set) => ({
   updateUser: (updates) =>
     set((state) => ({
       user: state.user ? { ...state.user, ...updates } : null,
+    })),
+
+  updateCompany: (updates) =>
+    set((state) => ({
+      company: state.company ? { ...state.company, ...updates } : null,
     })),
 
   setInitialized: () => set({ isInitializing: false }),

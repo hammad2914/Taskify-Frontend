@@ -37,7 +37,8 @@ export function SettingsPage() {
     taskAssigned: true, deadlineReminder: true, statusChanged: true, teamUpdates: false,
   });
 
-  const { user, company, logout } = useAuthStore();
+  const { user, company, logout, updateCompany } = useAuthStore();
+  const isAdmin = user?.role === 'COMPANY_ADMIN' || user?.role === 'SUPER_ADMIN';
   const { theme, setTheme } = useUIStore();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -47,6 +48,22 @@ export function SettingsPage() {
     mutationFn: () => api.patch(`/users/${user?.id}`, { fullName: profileForm.fullName || user?.fullName, email: profileForm.email || user?.email }),
     onSuccess: () => toast({ title: '✅ Profile updated' }),
     onError: () => toast({ variant: 'destructive', title: 'Update failed' }),
+  });
+
+  const companyMutation = useMutation({
+    mutationFn: () => api.patch<{ success: boolean; data: { company: { id: string; name: string } } }>(
+      '/auth/company',
+      { name: companyForm.name.trim() },
+    ),
+    onSuccess: (res) => {
+      updateCompany({ name: res.data.data.company.name });
+      setCompanyForm({ name: '' });
+      toast({ title: '✅ Company name updated' });
+    },
+    onError: (err: unknown) => {
+      const e = err as { response?: { data?: { message?: string } } };
+      toast({ variant: 'destructive', title: 'Update failed', description: e.response?.data?.message ?? 'Something went wrong' });
+    },
   });
 
   const passwordMutation = useMutation({
@@ -143,7 +160,14 @@ export function SettingsPage() {
           {/* Company */}
           {activeSection === 'company' && (
             <div className="glass rounded-2xl p-6 space-y-5 animate-scale-in">
-              <h2 className="font-heading font-bold text-lg text-white">Company</h2>
+              <div className="flex items-center justify-between">
+                <h2 className="font-heading font-bold text-lg text-white">Company</h2>
+                {!isAdmin && (
+                  <span className="flex items-center gap-1.5 text-xs text-white/35 bg-white/[0.05] border border-white/[0.08] rounded-full px-3 py-1">
+                    <Shield className="h-3 w-3" /> View only
+                  </span>
+                )}
+              </div>
               <Separator className="bg-white/[0.07]" />
               <div className="flex items-center gap-4">
                 <div className="h-14 w-14 rounded-xl bg-indigo/20 border border-indigo/30 flex items-center justify-center text-lg font-heading font-bold text-indigo">
@@ -160,10 +184,21 @@ export function SettingsPage() {
                   placeholder={company?.name}
                   value={companyForm.name}
                   onChange={(e) => setCompanyForm((f) => ({ ...f, name: e.target.value }))}
-                  className="h-10 bg-background border-white/[0.08] text-white placeholder:text-white/20 focus:border-indigo focus:ring-1 focus:ring-indigo/40 rounded-lg max-w-sm"
+                  disabled={!isAdmin}
+                  className="h-10 bg-background border-white/[0.08] text-white placeholder:text-white/20 focus:border-indigo focus:ring-1 focus:ring-indigo/40 rounded-lg max-w-sm disabled:opacity-40 disabled:cursor-not-allowed"
                 />
               </div>
-              <Button className="bg-gradient-primary text-white rounded-xl shimmer shadow-glow-sm">Save Changes</Button>
+              {isAdmin && (
+                <Button
+                  onClick={() => companyMutation.mutate()}
+                  disabled={!companyForm.name.trim() || companyMutation.isPending}
+                  className="bg-gradient-primary text-white rounded-xl shimmer shadow-glow-sm"
+                >
+                  {companyMutation.isPending
+                    ? <><Loader2 className="h-4 w-4 animate-spin mr-2" />Saving…</>
+                    : 'Save Changes'}
+                </Button>
+              )}
             </div>
           )}
 

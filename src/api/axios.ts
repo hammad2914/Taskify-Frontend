@@ -35,7 +35,10 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config as typeof error.config & { _retry?: boolean };
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    const isAuthEndpoint = (originalRequest.url ?? '').includes('/auth/');
+    const hasToken = !!useAuthStore.getState().accessToken;
+
+    if (error.response?.status === 401 && !originalRequest._retry && !isAuthEndpoint && hasToken) {
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
