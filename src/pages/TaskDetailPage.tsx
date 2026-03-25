@@ -247,6 +247,18 @@ export function TaskDetailPage() {
                         <CheckCircle2 className="h-3 w-3" /> Mark Complete
                       </Button>
                     )}
+                    {task.status === 'OVERDUE' && (
+                      <>
+                        <Button size="sm" onClick={() => statusMutation.mutate('IN_PROGRESS')} disabled={statusMutation.isPending}
+                          className="bg-indigo/15 text-indigo hover:bg-indigo/25 border border-indigo/25 rounded-lg h-8 text-xs gap-1.5">
+                          <Play className="h-3 w-3" /> Resume Working
+                        </Button>
+                        <Button size="sm" onClick={() => statusMutation.mutate('COMPLETED')} disabled={statusMutation.isPending}
+                          className="bg-warning/15 text-warning hover:bg-warning/25 border border-warning/25 rounded-lg h-8 text-xs gap-1.5">
+                          <CheckCircle2 className="h-3 w-3" /> Complete (Late)
+                        </Button>
+                      </>
+                    )}
                   </div>
                 )}
 
@@ -458,12 +470,24 @@ export function TaskDetailPage() {
                   <span className="text-xs text-white/35">Deadline</span>
                   <span className="text-xs font-semibold text-white/80 font-mono">{format(new Date(task.deadline), 'MMM d, yyyy')}</span>
                 </div>
-                {task.completedAt && (
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-white/35">Completed</span>
-                    <span className="text-xs font-medium text-success font-mono">{format(new Date(task.completedAt), 'MMM d, yyyy')}</span>
-                  </div>
-                )}
+                {task.completedAt && (() => {
+                  const late = new Date(task.completedAt) > new Date(task.deadline);
+                  return (
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-white/35">Completed</span>
+                      <div className="flex items-center gap-1.5">
+                        <span className={`text-xs font-medium font-mono ${late ? 'text-warning' : 'text-success'}`}>
+                          {format(new Date(task.completedAt), 'MMM d, yyyy')}
+                        </span>
+                        {late && (
+                          <span className="inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-semibold bg-warning/15 text-warning border border-warning/25">
+                            Late
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })()}
               </div>
             </div>
 

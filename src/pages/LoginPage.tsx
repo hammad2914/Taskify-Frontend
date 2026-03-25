@@ -11,6 +11,9 @@ import { api } from '@/api/axios';
 import { useAuthStore } from '@/stores/authStore';
 import { cn } from '@/utils/cn';
 import type { ApiResponse } from '@/types';
+import axios from 'axios';
+
+const API_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:4000';
 
 const schema = z.object({
   email:    z.string().email('Invalid email'),
@@ -20,8 +23,28 @@ type FormValues = z.infer<typeof schema>;
 
 export function LoginPage() {
   const [showPass, setShowPass] = useState(false);
+  const [demoLoading, setDemoLoading] = useState(false);
+  const [demoError, setDemoError] = useState('');
   const navigate = useNavigate();
   const { setAuth } = useAuthStore();
+
+  const handleDemoLogin = async () => {
+    setDemoLoading(true);
+    setDemoError('');
+    try {
+      const res = await axios.get<ApiResponse<{ user: { role: string }; company: object; accessToken: string }>>(
+        `${API_URL}/api/demo/login`,
+        { withCredentials: true },
+      );
+      const { user, company, accessToken } = res.data.data;
+      setAuth(user as never, company as never, accessToken);
+      navigate('/dashboard');
+    } catch {
+      setDemoError('Demo unavailable, try again');
+    } finally {
+      setDemoLoading(false);
+    }
+  };
 
   const { register, handleSubmit, formState: { errors, isSubmitting }, setError } = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -132,6 +155,33 @@ export function LoginPage() {
               Create workspace
             </Link>
           </p>
+
+          {/* Separator */}
+          <div className="flex items-center gap-3 my-5">
+            <div className="flex-1 h-px bg-white/[0.08]" />
+            <span className="text-xs text-white/25 font-mono">or</span>
+            <div className="flex-1 h-px bg-white/[0.08]" />
+          </div>
+
+          {/* Demo login */}
+          <div className="space-y-2">
+            <Button
+              type="button"
+              onClick={handleDemoLogin}
+              disabled={demoLoading}
+              className="w-full h-11 bg-gradient-to-r from-indigo-500 to-violet-500 text-white font-semibold rounded-xl py-3 shimmer shadow-glow-sm hover:shadow-glow transition-all active:scale-[0.97]"
+            >
+              {demoLoading
+                ? <><Loader2 className="h-4 w-4 animate-spin mr-2" /> Setting up demo…</>
+                : <><Zap className="h-4 w-4 mr-2" fill="currentColor" /> Try Demo — One Click</>}
+            </Button>
+            <p className="text-center text-[11px] text-white/25">
+              No signup required · Fresh data on every demo reset
+            </p>
+            {demoError && (
+              <p className="text-center text-xs text-danger animate-fade-in">{demoError}</p>
+            )}
+          </div>
         </div>
       </div>
 

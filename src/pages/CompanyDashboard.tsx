@@ -85,8 +85,10 @@ function ActionBubble({ action }: { action: string }) {
   const map: Record<string, { color: string; label: string }> = {
     CREATE:       { color: 'bg-indigo/20 text-indigo',  label: 'Created'  },
     UPDATE:       { color: 'bg-cyan/20 text-cyan',      label: 'Updated'  },
-    STATUS_CHANGE:{ color: 'bg-success/20 text-success',label: 'Status'   },
-    ACCEPT_TIMELINE: { color: 'bg-violet/20 text-violet', label: 'Accepted' },
+    STATUS_CHANGE:   { color: 'bg-success/20 text-success', label: 'Status ↑'  },
+    ACCEPT_TIMELINE: { color: 'bg-violet/20 text-violet',  label: 'Accepted'  },
+    COMMENT:         { color: 'bg-cyan/20 text-cyan',       label: 'Commented' },
+    ASSIGN:          { color: 'bg-amber-500/20 text-amber-400', label: 'Assigned' },
     DELETE:       { color: 'bg-danger/20 text-danger',  label: 'Deleted'  },
   };
   const cfg = map[action] ?? { color: 'bg-white/10 text-white/50', label: action };

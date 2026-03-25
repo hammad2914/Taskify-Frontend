@@ -105,11 +105,16 @@ function TaskRow({ task }: { task: Task }) {
             </span>
           </div>
           <div className="flex items-center gap-3 mt-0.5 text-xs text-white/30">
-            <span className={cn('font-mono', isOverdue && 'text-danger/70')}>
+            <span className={cn('font-mono', isOverdue && !isCompleted && 'text-danger/70')}>
               {isCompleted && task.completedAt
                 ? `Completed ${format(new Date(task.completedAt), 'MMM d')}`
                 : `Due ${format(new Date(task.deadline), 'MMM d, yyyy')}`}
             </span>
+            {isCompleted && task.completedAt && new Date(task.completedAt) > new Date(task.deadline) && (
+              <span className="inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-semibold bg-warning/15 text-warning border border-warning/25">
+                Completed Late
+              </span>
+            )}
             {task.projectId && (
               <span className="inline-flex items-center gap-1 bg-white/[0.05] rounded-md px-2 py-0.5 border border-white/[0.07] text-white/40">
                 {task.projectId.slice(0, 8)}…

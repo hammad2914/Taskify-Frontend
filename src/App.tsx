@@ -19,12 +19,18 @@ import { ReportsPage } from '@/pages/ReportsPage';
 import { SettingsPage } from '@/pages/SettingsPage';
 import { HRIntegrationPage } from '@/pages/HRIntegrationPage';
 import { LandingPage } from '@/pages/LandingPage';
+import { StatsPage } from '@/pages/StatsPage';
+import { CaseStudyPage } from '@/pages/CaseStudyPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 30000,
+      // staleTime: 0 → cached data shows instantly, but a background refetch
+      // fires on every mount so the page never displays stale data after navigation.
+      staleTime: 0,
       retry: 1,
+      refetchOnWindowFocus: true,
+      refetchOnMount: true,
     },
   },
 });
@@ -41,6 +47,8 @@ export default function App() {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/accept-invite/:token" element={<AcceptInvitePage />} />
+              <Route path="/stats" element={<StatsPage />} />
+              <Route path="/case-study" element={<CaseStudyPage />} />
 
               {/* Protected routes */}
               <Route
