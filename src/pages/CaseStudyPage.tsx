@@ -181,11 +181,14 @@ export function CaseStudyPage() {
             <span>Solo Project</span>
           </div>
 
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 mb-4">
             {['React', 'TypeScript', 'Node.js', 'PostgreSQL', 'Prisma', 'Socket.io', 'Gemini AI', 'TailwindCSS', 'JWT', 'Zustand'].map((t) => (
               <TechBadge key={t} label={t} />
             ))}
           </div>
+          <p className="text-white/35 text-xs font-mono leading-relaxed">
+            Architected as two independent repos with separate CI/CD pipelines — frontend deployed on Vercel, backend deployed on Render.
+          </p>
         </section>
 
         {/* ── SECTION 2: The Problem ────────────────────────────── */}
@@ -363,51 +366,76 @@ try {
             System Architecture
           </h2>
 
-          {/* Desktop: horizontal flow */}
-          <div className="rounded-2xl border border-white/[0.07] bg-[#0D1220] p-8">
-            {/* Row 1: Browser → Vercel → Express */}
-            <div className="hidden sm:flex items-center justify-center gap-3">
-              <ArchNode label="Browser" sublabel="React + Vite" color="border-indigo/30 bg-indigo/[0.06]" icon="🌐" />
-              <div className="flex items-center gap-1 text-white/20 text-xs font-mono">
-                <div className="w-8 h-px bg-white/10" />→
+          <div className="rounded-2xl border border-white/[0.07] bg-[#0D1220] p-6 sm:p-8 overflow-x-auto">
+            {/* ── Desktop diagram ── */}
+            <div className="hidden sm:block min-w-[560px]">
+
+              {/* Row 1 — two GitHub repos */}
+              <div className="grid grid-cols-2 gap-6">
+                <div className="flex flex-col items-center gap-2">
+                  <ArchNode label="GitHub: Taskify-Frontend" sublabel="Frontend repo" color="border-indigo-500/50 bg-indigo-500/[0.07]" icon="🐙" />
+                </div>
+                <div className="flex flex-col items-center gap-2">
+                  <ArchNode label="GitHub: Taskify-Backend" sublabel="Backend repo" color="border-violet-500/50 bg-violet-500/[0.07]" icon="🐙" />
+                </div>
               </div>
-              <ArchNode label="Vercel CDN" sublabel="Frontend Deploy" color="border-indigo/20 bg-indigo/[0.04]" icon="▲" />
-              <div className="flex items-center gap-1 text-white/20 text-xs font-mono">
-                <div className="w-8 h-px bg-white/10" />→
+
+              {/* Row 1 → Row 2 arrows */}
+              <div className="grid grid-cols-2 gap-6">
+                <div className="flex justify-center"><Arrow /></div>
+                <div className="flex justify-center"><Arrow /></div>
               </div>
-              <ArchNode label="Express API" sublabel="Render · Node.js" color="border-violet/30 bg-violet/[0.06]" icon="⚙️" />
+
+              {/* Row 2 — deploy targets */}
+              <div className="grid grid-cols-2 gap-6">
+                <div className="flex flex-col items-center gap-2">
+                  <ArchNode label="Vercel — React" sublabel="Frontend deploy" color="border-indigo-500/30 bg-indigo-500/[0.09]" icon="▲" />
+                </div>
+                <div className="flex flex-col items-center gap-2">
+                  <ArchNode label="Render — Node.js" sublabel="Backend API" color="border-violet-500/30 bg-violet-500/[0.09]" icon="⚙️" />
+                </div>
+              </div>
+
+              {/* Convergence lines → Neon */}
+              <div className="relative flex justify-center mt-2">
+                {/* left arm */}
+                <div className="absolute left-[25%] top-0 w-[26%] h-6 border-b border-l border-dashed border-white/15 rounded-bl-lg" />
+                {/* right arm */}
+                <div className="absolute right-[25%] top-0 w-[26%] h-6 border-b border-r border-dashed border-white/15 rounded-br-lg" />
+                <div className="flex flex-col items-center mt-6">
+                  <Arrow />
+                </div>
+              </div>
+
+              {/* Row 3 — Neon PostgreSQL */}
+              <div className="flex justify-center mt-2">
+                <div className="w-56">
+                  <ArchNode label="Neon PostgreSQL" sublabel="Prisma ORM · multi-tenant" color="border-cyan-500/40 bg-cyan-500/[0.06]" icon="🗄️" />
+                </div>
+              </div>
+
+              {/* Neon → Gemini */}
+              <div className="flex justify-center"><Arrow /></div>
+
+              {/* Row 4 — Gemini AI */}
+              <div className="flex justify-center">
+                <div className="w-56">
+                  <ArchNode label="Gemini AI API" sublabel="Google GenAI · reports" color="border-emerald-500/40 bg-emerald-500/[0.06]" icon="🤖" />
+                </div>
+              </div>
             </div>
 
-            {/* Row 2: API fans out */}
-            <div className="hidden sm:flex items-start justify-center gap-8 mt-4 pt-4 border-t border-white/[0.04]">
-              <div className="flex flex-col items-center gap-2">
-                <Arrow />
-                <ArchNode label="PostgreSQL" sublabel="Neon · Prisma ORM" color="border-cyan-500/30 bg-cyan-500/[0.05]" icon="🗄️" />
-              </div>
-              <div className="flex flex-col items-center gap-2">
-                <Arrow />
-                <ArchNode label="Socket.io" sublabel="Real-time events" color="border-violet/30 bg-violet/[0.05]" icon="🔌" />
-              </div>
-              <div className="flex flex-col items-center gap-2">
-                <Arrow />
-                <ArchNode label="Gemini AI" sublabel="Google GenAI" color="border-emerald-500/30 bg-emerald-500/[0.05]" icon="🤖" />
-              </div>
-              <div className="flex flex-col items-center gap-2">
-                <Arrow />
-                <ArchNode label="Brevo" sublabel="Transactional email" color="border-amber-500/30 bg-amber-500/[0.05]" icon="✉️" />
-              </div>
-            </div>
-
-            {/* Mobile: vertical stack */}
-            <div className="flex sm:hidden flex-col items-center gap-2">
+            {/* ── Mobile: vertical stack ── */}
+            <div className="flex sm:hidden flex-col items-center gap-1">
               {[
-                { label: 'Browser', sublabel: 'React + Vite', color: 'border-indigo/30 bg-indigo/[0.06]', icon: '🌐' },
-                { label: 'Vercel CDN', sublabel: 'Frontend Deploy', color: 'border-indigo/20 bg-indigo/[0.04]', icon: '▲' },
-                { label: 'Express API', sublabel: 'Render · Node.js', color: 'border-violet/30 bg-violet/[0.06]', icon: '⚙️' },
-                { label: 'PostgreSQL', sublabel: 'Neon · Prisma ORM', color: 'border-cyan-500/30 bg-cyan-500/[0.05]', icon: '🗄️' },
-                { label: 'Gemini AI', sublabel: 'Google GenAI', color: 'border-emerald-500/30 bg-emerald-500/[0.05]', icon: '🤖' },
+                { label: 'GitHub: Taskify-Frontend', sublabel: 'Frontend repo',          color: 'border-indigo-500/50 bg-indigo-500/[0.07]', icon: '💻' },
+                { label: 'Vercel — React',           sublabel: 'Frontend deploy',         color: 'border-indigo-500/30 bg-indigo-500/[0.09]', icon: '▲'  },
+                { label: 'GitHub: Taskify-Backend',  sublabel: 'Backend repo',            color: 'border-violet-500/50 bg-violet-500/[0.07]', icon: '💻' },
+                { label: 'Render — Node.js',         sublabel: 'Backend API',             color: 'border-violet-500/30 bg-violet-500/[0.09]', icon: '⚙️' },
+                { label: 'Neon PostgreSQL',          sublabel: 'Prisma ORM · multi-tenant',color:'border-cyan-500/40 bg-cyan-500/[0.06]',     icon: '🗄️' },
+                { label: 'Gemini AI API',            sublabel: 'Google GenAI · reports',  color: 'border-emerald-500/40 bg-emerald-500/[0.06]',icon: '🤖' },
               ].map((node, i) => (
-                <div key={node.label} className="flex flex-col items-center w-full max-w-[220px] gap-1">
+                <div key={node.label} className="flex flex-col items-center w-full max-w-[240px] gap-0.5">
                   {i > 0 && <Arrow />}
                   <ArchNode {...node} />
                 </div>
@@ -415,10 +443,15 @@ try {
             </div>
 
             {/* Legend */}
-            <div className="flex flex-wrap justify-center gap-4 mt-6 pt-4 border-t border-white/[0.04] text-xs text-white/30">
-              {[['indigo', 'Frontend'], ['violet', 'Backend'], ['cyan', 'Database'], ['emerald', 'AI / ML']].map(([color, lbl]) => (
+            <div className="flex flex-wrap justify-center gap-4 mt-8 pt-4 border-t border-white/[0.04] text-xs text-white/30">
+              {[
+                { dot: 'bg-indigo-500/60',   lbl: 'Frontend' },
+                { dot: 'bg-violet-500/60',   lbl: 'Backend'  },
+                { dot: 'bg-cyan-500/60',     lbl: 'Database' },
+                { dot: 'bg-emerald-500/60',  lbl: 'AI / ML'  },
+              ].map(({ dot, lbl }) => (
                 <div key={lbl} className="flex items-center gap-1.5">
-                  <div className={`h-2 w-2 rounded-full bg-${color}-500/60`} />
+                  <div className={`h-2 w-2 rounded-full ${dot}`} />
                   {lbl}
                 </div>
               ))}
@@ -470,7 +503,7 @@ try {
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <a
-              href="https://taskify.vercel.app"
+              href="https://taskify-frontend-steel.vercel.app/"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-500 to-violet-500 px-6 py-3 text-sm font-semibold text-white hover:opacity-90 transition-all shadow-lg shadow-indigo/25"
@@ -478,13 +511,27 @@ try {
               <ExternalLink className="h-4 w-4" /> See it live
             </a>
             <a
-              href="https://github.com"
+              href="https://github.com/hammad2914/Taskify-Frontend"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-6 py-3 text-sm font-semibold text-white/70 hover:text-white hover:border-white/20 transition-all"
+              className="inline-flex items-center gap-2 rounded-xl border border-indigo-500 px-5 py-2.5 text-sm font-semibold text-indigo-400 hover:bg-indigo-500/10 transition-all"
             >
-              <Github className="h-4 w-4" /> View source
+              <Github className="h-4 w-4" /> Frontend Repo
             </a>
+            <a
+              href="https://github.com/hammad2914/Taskify-Backend"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-xl border border-violet-500 px-5 py-2.5 text-sm font-semibold text-violet-400 hover:bg-violet-500/10 transition-all"
+            >
+              <Github className="h-4 w-4" /> Backend Repo
+            </a>
+            <Link
+              to="/"
+              className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.03] px-5 py-2.5 text-sm font-semibold text-white/40 hover:text-white hover:border-white/20 transition-all"
+            >
+              <ArrowLeft className="h-4 w-4" /> Back
+            </Link>
           </div>
 
           <div className="flex flex-wrap justify-center gap-4 pt-4">
@@ -493,9 +540,6 @@ try {
             </Link>
             <Link to="/login" className="inline-flex items-center gap-1.5 text-xs text-white/30 hover:text-indigo transition-colors">
               <Zap className="h-3 w-3" /> Try Demo
-            </Link>
-            <Link to="/" className="inline-flex items-center gap-1.5 text-xs text-white/30 hover:text-white/50 transition-colors">
-              <ArrowLeft className="h-3 w-3" /> Back
             </Link>
           </div>
         </section>

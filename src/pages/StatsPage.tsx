@@ -190,12 +190,20 @@ export function StatsPage() {
             <Zap className="h-4 w-4" /> Back to App
           </Link>
           <a
-            href="https://github.com"
+            href="https://github.com/hammad2914/Taskify-Frontend"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-6 py-3 text-sm font-semibold text-white/70 hover:text-white hover:border-white/20 transition-all"
+            className="inline-flex items-center gap-2 rounded-xl border border-indigo-500 px-5 py-2.5 text-sm font-semibold text-indigo-400 hover:bg-indigo-500/10 transition-all"
           >
-            <Github className="h-4 w-4" /> View on GitHub
+            <Github className="h-4 w-4" /> Frontend Repo
+          </a>
+          <a
+            href="https://github.com/hammad2914/Taskify-Backend"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-xl border border-violet-500 px-5 py-2.5 text-sm font-semibold text-violet-400 hover:bg-violet-500/10 transition-all"
+          >
+            <Github className="h-4 w-4" /> Backend Repo
           </a>
           <Link
             to="/case-study"
